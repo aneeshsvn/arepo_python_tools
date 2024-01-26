@@ -2,7 +2,7 @@ import numpy as np
 from global_props import get_particle_data
 from com import mediancenter
 
-def radial_avg(path,snap,ptype,prop,rmin,rmax,bins):
+def radial_profile(path,snap,ptype,prop,rmin,rmax,bins):
     pdata = get_particle_data(path,snap,ptype,['Coordinates',prop])
     center = mediancenter(path,snap)
     x = pdata['Coordinates']-center
