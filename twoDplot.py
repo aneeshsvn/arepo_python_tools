@@ -173,7 +173,7 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
         i=0
         proj_property=[]
         while i+numz <= len(quant):
-            proj_property.append(np.average(quant[i:i+numz]))
+            proj_property.append(np.nanmean(quant[i:i+numz]))
             i+=numz
         proj_property=np.array(proj_property)
         proj_property = proj_property.reshape((lx1,lx2))
@@ -272,7 +272,7 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
         # im=ax0.imshow(proj_property,norm=mcolors.LogNorm(vmin=1e-1,vmax=1e3),cmap='inferno',rasterized=True)
         # im=ax0.pcolormesh(First,Second,np.log10(proj_property),vmin=-4,vmax=2.5,cmap='inferno',rasterized=True,shading='gouraud')
         # im=ax0.pcolormesh(First,Second,np.log10(proj_property),vmin=-4,vmax=2.5+1,cmap='inferno',rasterized=True)
-        im=ax0.pcolormesh(First,Second,np.log10(proj_property),vmin=-1,vmax=3.5,cmap='inferno',rasterized=True)
+        im=ax0.pcolormesh(First,Second,np.log10(proj_property),vmin=-3,vmax=3.5,cmap='inferno',rasterized=True)
 
         if (axis==None and colorbar==True):
             cbar=fig.colorbar(im,cax=axins)
