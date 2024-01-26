@@ -2,24 +2,6 @@ import numpy as np
 import illustris_python as il
 import matplotlib.pyplot as plt
 
-def plot(X,Y,n,label=None,color=None,linewidth=None,linestyle=None,alpha=1):
-    """Plots the average of Y over n points against the average of X over n points."""
-    XX=[]
-    YY=[]
-    for i in np.arange(0,len(X),1):
-        XX.append(np.average(X[i:i+n]))
-        YY.append(np.average(Y[i:i+n]))
-    plt.plot(XX,YY,label=label,color=color,linewidth=linewidth,linestyle=linestyle,alpha=alpha)
-    
-def axplot(axis,X,Y,n,label=None,color=None,linewidth=None,linestyle=None,alpha=1):
-    """Plots the average of Y over n points against the average of X over n points."""
-    XX=[]
-    YY=[]
-    for i in np.arange(0,len(X),1):
-        XX.append(np.average(X[i:i+n]))
-        YY.append(np.average(Y[i:i+n]))
-    axis.plot(XX,YY,label=label,color=color,linewidth=linewidth,linestyle=linestyle,alpha=alpha)
-
 
 def weighted_median(output_path, snapnum):
     # returns the weighted median of the particle positions
