@@ -103,12 +103,12 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
         bhy1=-bhx*sp+bhy*cp
         bhz1=bhx*st*cp+bhy*st*sp+bhz*ct
         
-#         if showCOM == True:
-#             com=tf.getCOM(path,snapnum)-cent
-#             comx=com[0]comy=com[1]comz=com[2]
-#             comx1=comx*ct*cp+comy*sp*ct-st*comz
-#             comy1=-comx*sp+comy*cp
-#             comz1=comx*st*cp+comy*st*sp+comz*ct
+        # if showCOM == True:
+        #     com=tf.getCOM(path,snapnum)-cent
+        #     comx=com[0]comy=com[1]comz=com[2]
+        #     comx1=comx*ct*cp+comy*sp*ct-st*comz
+        #     comy1=-comx*sp+comy*cp
+        #     comz1=comx*st*cp+comy*st*sp+comz*ct
 
     if (view=='xy'):
         axis1=xpos; axis2=ypos; axis3=zpos; bhaxis1=bhx1; bhaxis2=bhy1
@@ -205,7 +205,7 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
             axis2_low=axis2[lowdensmask]
             prop1=prop[lowdensmask]
             density_low = densities[lowdensmask]
-#             arr=[x for _,x in sorted(zip( size, np.arange(len(prop1)) ))] 
+            # arr=[x for _,x in sorted(zip( size, np.arange(len(prop1)) ))] 
             arr = np.argsort(size)
             proj_freq_temp=proj_freq*100
             for idx in arr:
@@ -225,10 +225,10 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
             if particle_property=='Density':
                 proj_property[proj_freq==0]=1e-100
                 proj_freq[proj_freq==0]=1
-#             if particle_property=='Pressure':
-#                 proj_property[proj_freq==0]=1e-100
-#                 proj_freq[proj_freq==0]=1
-#             if particle_property== 'Velocity' or 'Temperature':
+            # if particle_property=='Pressure':
+            #     proj_property[proj_freq==0]=1e-100
+            #     proj_freq[proj_freq==0]=1
+            # if particle_property== 'Velocity' or 'Temperature':
             else:
                 for i in range(lx1):
                     for j in range(lx2):
@@ -276,9 +276,9 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
 
         if (axis==None and colorbar==True):
             cbar=fig.colorbar(im,cax=axins)
-    #         ax0.set_aspect('equal')
+            # ax0.set_aspect('equal')
             cbar.set_label(r'$\mathrm{Log(Density [M_{\odot}pc^{-2}])}$')
-    #         ax0.set_title('{} density, t = {}'.format(partname[p_type],snapnum/200))
+            # ax0.set_title('{} density, t = {}'.format(partname[p_type],snapnum/200))
         ax0.text(0.01, 0.03, '{:.3f}Gyr'.format(header.get('Time')/0.7), transform=ax0.transAxes, fontsize=font_size,color='white')
        
     if (particle_property=='Temperature'):
@@ -365,19 +365,6 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
         #to plot surface density maximum
     if plotlightpeak == True:
         sqlen = 0.7*2
-        # square = proj_property[int((bhaxis1[0] + 0.5*box_length -sqlen/2)/h):int((bhaxis1[0] + 0.5*box_length +sqlen/2)/h), int((bhaxis2[0] + 0.5*box_width -sqlen/2)/h):int((bhaxis2[0] + 0.5*box_width +sqlen/2)/h)]
-        # Lmaxid = np.unravel_index(square.argmax(), square.shape)
-        # ax0.scatter( [bhaxis1[0] + Lmaxid[0]*h - sqlen/2], [bhaxis2[0] + Lmaxid[1]*h - sqlen/2], color='black',marker='^',s=4)
-        
-        # Lmaxid = np.unravel_index(proj_property.argmax(), proj_property.shape)
-        # Lmaxid = [int(len(proj_property)/2), int(len(proj_property[0])/2)]
-        # ax0.scatter( [Lmaxid[1]*h + 0*h/2 - box_length/2], [Lmaxid[0]*h + 0*h/2- box_width/2], color='black',marker='^',s=4)
-        # print('shape of proj_prop = ',np.shape(proj_property))
-        # print('Lmaxid = ',Lmaxid)
-        # print(f'box length = {box_length}, box width = {box_width}, h = {h}')
-        # print(f'Lmax = ({Lmaxid[1]*h + h/2 - box_length/2},{Lmaxid[0]*h + h/2- box_width/2})')
-        # ax0.scatter( [len(proj_property)*h + h/2 - box_length/2], [bhaxis2[0] + Lmaxid[1]*h + h/2- box_width/2], color='black',marker='^',s=4)
-        
         Lmaxid = [0,0]; Lmax=0; Ncells = int(0.5*0.7/h/2) 
         Ncells = 2
         for i in range(int(sqlen/h)):
