@@ -1,7 +1,7 @@
 # arepo_python_tools
 Python package with tools to analyze simulation data from AREPO hydrodynamics simulations
 
-Includes functions to :
+Includes functions to :  
 generate 2D images of particle properties like Density, Temperature, Velocity, Pressure etc.  
 calculate and plot radial profiles of all quantities  
 calculate flux of quantities like mass, momentum etc. of particles using different methods  
