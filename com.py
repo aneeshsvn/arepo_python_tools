@@ -170,11 +170,11 @@ def get_iter_com(output_path, snapnum, guess, R):
     pdata = get_particle_data(output_path, snapnum, '012345', ['Coordinates', 'Masses'])
     if isinstance(guess, str) and (guess[:2] == 'bh'):
         bhids = il.snapshot.loadSubset(output_path, 0, 5, 'ParticleIDs')
-        bhnum = int(guess[2:])
         bh = il.snapshot.loadSubset(output_path, snapnum, 5, ['Coordinates', 'ParticleIDs'])
         if bh['count'] == 1:
             guess_com = bh['Coordinates'][0]
         else:
+            bhnum = int(guess[2:])
             guess_com = bh['Coordinates'][bh['ParticleIDs'] == bhids[bhnum]]
         return rec_com(guess_com, R, pdata['Coordinates'], pdata['Masses'])
     else:
