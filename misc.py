@@ -66,7 +66,7 @@ def rhalfstar(path,snap,center='bh',R=10):
         if cummass[i] >= cummass[-1]/2:
             return sorted_r[i]
         
-def scaleheight(path,snap,center):
+def scaleheight(path,snap,center,Rc=3):
     gas = il.snapshot.loadSubset(path,snap,0,['Coordinates','Masses','Velocities'])
     cent = get_iter_com(path,snap,center,10)
     pos = gas['Coordinates'] - cent
@@ -93,7 +93,7 @@ def scaleheight(path,snap,center):
     ypos=-x1*sp+y1*cp
     zpos=x1*st*cp+y1*st*sp+z1*ct
     
-    mask = (xpos**2 + ypos**2 < 3**2) & (np.abs(zpos)<3)
+    mask = (xpos**2 + ypos**2 < Rc**2) & (np.abs(zpos)<3)
     masses = gas['Masses'][mask]
     zpos = zpos[mask]
     zmin = -3.0; zmax = 3.0; dz = 0.01
@@ -117,12 +117,12 @@ def scaleheight(path,snap,center):
     return time, (h1-h2)/2
 
 
-def scaleheight_vs_time(path,center,Ncpu=None):
+def scaleheight_vs_time(path,center,Ncpu=None,Rc=3):
     N=len(glob.glob1(path,"snapshot_*.hdf5"))
     if Ncpu == None:
         Ncpu=multiprocessing.cpu_count()
     p=Pool(Ncpu)
-    result=np.array(p.starmap(scaleheight , [(path,i,center) for i in range(N)]))
+    result=np.array(p.starmap(scaleheight , [(path,i,center,Rc) for i in range(N)]))
     p.close()
     p.join()
     return result[:,0],result[:,1]

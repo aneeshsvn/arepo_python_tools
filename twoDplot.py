@@ -10,7 +10,7 @@ from global_props import get_particle_data
 import ptorrey_packages.utils.calc_hsml as calc_hsml
 
 def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,box_length=20,box_width=20,Nbins=1000,method='binning',
-                  ngb=12,align=False,centre=None,fill=0,gauss=0,save_name='0',dpi=300,figure=None,axis=None,showBH=True,
+                  ngb=12,align=False,centre=None,fill=0,gauss=0,save_name=None,dpi=300,figure=None,axis=None,showBH=True,
                   colorbar=True,font_size=10,figuresize=None,scalelen='auto',smooth=True, plotlightpeak=False, vmin = None, vmax = None):
     '''
     path: path to the simulation output folder
@@ -239,9 +239,11 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
                             proj_property[i,j] = arr[np.nonzero(arr)].mean()
                             proj_freq[i,j]=1
         
-        if particle_property == 'Density':
+        if (particle_property == 'Density'):
             proj_property /= (h*h)
             proj_property[proj_freq==0]=1e-100
+        elif particle_property == ('StarFormationRate'):
+            proj_property /= (h*h*1e6/0.7/0.7)
         else:
             proj_property /= proj_freq
         if smooth == True:
@@ -319,14 +321,14 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
             cbar.set_label(r'Log(Pressure [$M_\odot/(pc\,yr^2)$])')
         ax0.text(0.01, 0.03, '{:.3f}Gyr'.format(header.get('Time')/0.7), transform=ax0.transAxes, fontsize=font_size,color='black')
 
-    else:     
+    elif (particle_property=='StarFormationRate'):     
         if (vmin == None) & (vmax == None):
             im=ax0.pcolormesh(First,Second,np.log10(proj_property),rasterized=True,cmap='ocean')
         else:
-            im=ax0.pcolormesh(First,Second,proj_property,vmin=vmin,vmax=vmax,rasterized=True,cmap='coolwarm')
+            im=ax0.pcolormesh(First,Second,np.log10(proj_property),vmin=vmin,vmax=vmax,rasterized=True,cmap='ocean')
         if (axis==None and colorbar==True):
             cbar=fig.colorbar(im,cax=axins)
-            cbar.set_label(rf'$\mathrm{{Log({particle_property} \;[code units])}}$')
+            cbar.set_label(rf'$\mathrm{{Log(SFR surf density \;[M_\odot/yr/pc^2])}}$')
         ax0.text(0.01, 0.03, '{:.3f}Gyr'.format(header.get('Time')/0.7), transform=ax0.transAxes, fontsize=font_size,color='white')    
     
         
@@ -406,9 +408,10 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
     if figuresize is None:
         ax0.set_aspect('equal')
     
-    if (save_name=='0'):
+    if (save_name==None):
 #         plt.show()
-        return im
+        # return im
+        return proj_property, proj_freq
     else:
         plt.savefig(save_name,bbox_inches='tight',dpi=dpi)
         plt.close()
