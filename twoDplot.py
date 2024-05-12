@@ -277,7 +277,8 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
         # im=ax0.pcolormesh(First,Second,np.log10(proj_property),vmin=-4,vmax=2.5,cmap='inferno',rasterized=True,shading='gouraud')
         # im=ax0.pcolormesh(First,Second,np.log10(proj_property),vmin=-4,vmax=2.5+1,cmap='inferno',rasterized=True)
         if (vmin == None) & (vmax == None):
-            vmin = -3; vmax = 3.5 
+            # vmin = -3; vmax = 3.5 
+            vmin = -1; vmax = 3
         im=ax0.pcolormesh(First,Second,np.log10(proj_property),vmin=vmin,vmax=vmax,cmap='inferno',rasterized=True)
 
         if (axis==None and colorbar==True):
@@ -410,8 +411,8 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
     
     if (save_name==None):
 #         plt.show()
-        # return im
-        return proj_property, proj_freq
+        return im
+        # return proj_property, proj_freq
     else:
         plt.savefig(save_name,bbox_inches='tight',dpi=dpi)
         plt.close()

@@ -66,7 +66,7 @@ def rhalfstar(path,snap,center='bh',R=10):
         if cummass[i] >= cummass[-1]/2:
             return sorted_r[i]
         
-def scaleheight(path,snap,center,Rc=3):
+def scaleheight(path, snap, center, cone = False, Rc=3, r0 = 0.2):
     gas = il.snapshot.loadSubset(path,snap,0,['Coordinates','Masses','Velocities'])
     cent = get_iter_com(path,snap,center,10)
     pos = gas['Coordinates'] - cent
@@ -93,23 +93,32 @@ def scaleheight(path,snap,center,Rc=3):
     ypos=-x1*sp+y1*cp
     zpos=x1*st*cp+y1*st*sp+z1*ct
     
-    mask = (xpos**2 + ypos**2 < Rc**2) & (np.abs(zpos)<3)
-    masses = gas['Masses'][mask]
-    zpos = zpos[mask]
     zmin = -3.0; zmax = 3.0; dz = 0.01
-    heights = np.arange(zmin+dz/2, zmax-dz/2 + dz/10, dz); massbins = np.zeros_like(heights)
+    heights = np.arange(zmin+dz/2, zmax-dz/2 + dz/10, dz)
+    if cone:
+        volumes = np.pi / 12 * dz * (dz**2 + 12 * (r0 + heights))
+    else:
+        volumes = np.pi * Rc**2 * dz
+    massbins = np.zeros_like(heights)
+
     for i in range(len(zpos)):
-        index = int((zpos[i]-zmin)/dz)
-        massbins[index] += masses[i]
-    # return heights, massbins
-    maxid = np.argmax(massbins)
+        if cone:
+            r = (r0 + zpos[i])**2
+        else:
+            r  = Rc
+        if (np.abs(zpos[i]) <= 3) &  (xpos[i]**2 + ypos[i]**2 < r):
+            index = int((zpos[i]-zmin)/dz)
+            massbins[index] += gas['Masses'][i]
+    
+    densities = massbins / volumes
+    maxid = np.argmax(densities)
     h1 = np.nan; h2 = np.nan
-    for i in range(maxid, len(massbins)):
-        if massbins[i] < 0.1*massbins[maxid]:
+    for i in range(maxid, len(densities)):
+        if densities[i] < 0.1*densities[maxid]:
             h1 = heights[i]
             break
     for i in range(maxid, 0, -1):
-        if massbins[i] < 0.1*massbins[maxid]:
+        if densities[i] < 0.1*densities[maxid]:
             h2 = heights[i]
             break
     time = il.snapshot.loadHeader(path,snap).get('Time')
@@ -117,12 +126,12 @@ def scaleheight(path,snap,center,Rc=3):
     return time, (h1-h2)/2
 
 
-def scaleheight_vs_time(path,center,Ncpu=None,Rc=3):
+def scaleheight_vs_time(path, center, cone = False, Rc=3, r0 = 0.2, Ncpu=None):
     N=len(glob.glob1(path,"snapshot_*.hdf5"))
     if Ncpu == None:
         Ncpu=multiprocessing.cpu_count()
     p=Pool(Ncpu)
-    result=np.array(p.starmap(scaleheight , [(path,i,center,Rc) for i in range(N)]))
+    result=np.array(p.starmap(scaleheight , [(path, i, center, cone, Rc, r0) for i in range(N)]))
     p.close()
     p.join()
     return result[:,0],result[:,1]

@@ -36,9 +36,14 @@ def flux_shell(path,snap,R,width,p_type='0',vcut=None,center='bh'):
     rvel=np.array([np.dot(vel[i],n[i]) for i in range(len(n))])
     if vcut == None:
         flux = np.sum(mass*rvel)/width
-    else:
+    elif isinstance(vcut, (float,int)):
         mask= (rvel > vcut)
         flux = np.sum(mass[mask]*rvel[mask])/width
+    elif isinstance(vcut, (list,np.ndarray)) and len(vcut) == 2:
+        mask = (rvel > vcut[0]) & (rvel < vcut[1])
+        flux = np.sum(mass[mask]*rvel[mask])/width
+    else:
+        print('Error: vcut can only be a number or list of two numbers')
     return time, flux, len(rvel)
 
 def flux_vs_time_shell(path,R,width,p_type='0',Ncores=None,vcut=None,center='bh0',normalize=False):

@@ -187,6 +187,10 @@ def get_particle_data(path,snap,ptypes,fields):
             fields1=fields.copy()
             fields1.remove('Masses')
         else: fields1=fields
+        if 'Temperature' in fields1:
+            if ptypes != '0':
+                raise Exception('Only gas has temperature!')
+            fields1.remove('Temperature')
         particles = il.snapshot.loadSubset(path,snap,eval(pt),fields=fields1,sq=False)
         if particles['count'] > 0:
             result['count'] += particles['count']
@@ -200,6 +204,16 @@ def get_particle_data(path,snap,ptypes,fields):
                 else:
                     mm=[m]*particles['count']
                 result['Masses'].extend(mm)
+            if 'Temperature' in fields:
+                gas = il.snapshot.loadSubset(path,snap,eval(pt),fields=['InternalEnergy','ElectronAbundance'],sq=False)
+                u=gas['InternalEnergy']
+                xe=gas['ElectronAbundance']
+                mp=1.672*10**(-24)
+                mu=4*mp/(1+3*0.76+4*0.76*xe)
+                kb=1.380*10**(-16)
+                UnitEnergybyUnitMass=9.576*10**9
+                Temp=u*(5.0/3.0-1)/kb*UnitEnergybyUnitMass*mu
+                result['Temperature'].extend(Temp)
     for name in fields:
         result[name] = np.array(result[name])
     return result
