@@ -283,6 +283,7 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
 
         if (axis==None and colorbar==True):
             cbar=fig.colorbar(im,cax=axins)
+            cbar.ax.tick_params(axis='y', direction='out')
             # ax0.set_aspect('equal')
             cbar.set_label(r'$\mathrm{Log(Density [M_{\odot}pc^{-2}])}$')
             # ax0.set_title('{} density, t = {}'.format(partname[p_type],snapnum/200))
@@ -296,6 +297,7 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
         ax0.set_aspect('equal')
         if (axis==None and colorbar==True):
             cbar=fig.colorbar(im,cax=axins)
+            cbar.ax.tick_params(axis='y', direction='out')
             cbar.set_label(r'Log(Temperature [$K$])')
         ax0.text(0.01, 0.03, '{:.3f}Gyr'.format(header.get('Time')/0.7), transform=ax0.transAxes, fontsize=font_size,color='white')
         
@@ -308,6 +310,7 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
         ax0.set_aspect('equal')
         if (axis==None and colorbar==True):
             cbar=fig.colorbar(im,cax=axins)
+            cbar.ax.tick_params(axis='y', direction='out')
             cbar.set_label(r'Log(Speed [$km/s$])')
         ax0.text(0.01, 0.03, '{:.3f}Gyr'.format(header.get('Time')/0.7), transform=ax0.transAxes, fontsize=font_size,color='white')
         
@@ -319,6 +322,7 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
         ax0.set_aspect('equal')
         if (axis==None and colorbar==True):
             cbar=fig.colorbar(im,cax=axins)
+            cbar.ax.tick_params(axis='y', direction='out')
             cbar.set_label(r'Log(Pressure [$M_\odot/(pc\,yr^2)$])')
         ax0.text(0.01, 0.03, '{:.3f}Gyr'.format(header.get('Time')/0.7), transform=ax0.transAxes, fontsize=font_size,color='black')
 
@@ -329,6 +333,7 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
             im=ax0.pcolormesh(First,Second,np.log10(proj_property),vmin=vmin,vmax=vmax,rasterized=True,cmap='ocean')
         if (axis==None and colorbar==True):
             cbar=fig.colorbar(im,cax=axins)
+            cbar.ax.tick_params(axis='y', direction='out')
             cbar.set_label(rf'$\mathrm{{Log(SFR surf density \;[M_\odot/yr/pc^2])}}$')
         ax0.text(0.01, 0.03, '{:.3f}Gyr'.format(header.get('Time')/0.7), transform=ax0.transAxes, fontsize=font_size,color='white')    
     
