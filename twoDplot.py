@@ -171,11 +171,15 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
         else:
             particle_masses = particle_data['Masses'][mask1]
             quant=calc_hsml.get_gas_temperature_around_stars( axis1, axis2, axis3, particle_masses, [0]*len(prop), prop, x.flatten(), y.flatten(), z.flatten(), DesNgb=ngb)
+            rho = calc_hsml.get_gas_density_around_stars( axis1, axis2, axis3, particle_masses, x.flatten(), y.flatten(), z.flatten(), DesNgb=ngb)
         numz = len(ax3)
         i=0
         proj_property=[]
         while i+numz <= len(quant):
-            proj_property.append(np.nanmean(quant[i:i+numz]))
+            if particle_property == 'Density':
+                proj_property.append(np.nanmean(quant[i:i+numz]))
+            else:
+                proj_property.append(np.nansum(quant[i:i+numz] * rho[i:i+numz])/np.nansum(rho[i:i+numz]))
             i+=numz
         proj_property=np.array(proj_property)
         proj_property = proj_property.reshape((lx1,lx2))
@@ -293,7 +297,7 @@ def galaxy2Dplots(path,snapnum,p_type,particle_property,view='xy',box_height=5,b
         if (vmin == None) & (vmax == None):
             vmin = 3; vmax = 7
         # im=ax0.pcolor(First,Second,proj_property,norm=mcolors.LogNorm(vmin=1e3,vmax=1e7),rasterized=True,shading='auto')
-        im=ax0.pcolormesh(First,Second,np.log10(proj_property),vmin=3,vmax=7,rasterized=True,shading='gouraud')
+        im=ax0.pcolormesh(First,Second,np.log10(proj_property),vmin=vmin,vmax=vmax,rasterized=True,shading='gouraud')
         ax0.set_aspect('equal')
         if (axis==None and colorbar==True):
             cbar=fig.colorbar(im,cax=axins)

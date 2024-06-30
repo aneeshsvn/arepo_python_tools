@@ -9,7 +9,9 @@ import ptorrey_packages.utils.calc_hsml as calc_hsml
 
 def flux_shell(path,snap,R,width,p_type='0',vcut=None,center='bh'):
     '''calculates flux of particle type p_type through a sphere of radius R with given center as sum of mass * radial_vel / shell_width'''
-    if center[:2] == 'bh':
+    if isinstance(center, (list,np.ndarray)) and len(center) == 3:
+        cen = np.array(center)
+    elif center[:2] == 'bh':
         bh = il.snapshot.loadSubset(path,snap,5,['Coordinates','ParticleIDs'])
         if bh['count'] == 1:
             cen = bh['Coordinates'][0]
